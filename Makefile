@@ -56,6 +56,11 @@ license: LICENSE LICENSE_HEADER $(VENV)
 	poetry run python -m licenseheaders -t ${LICENSE_HEADER} -d tools $(args)
 	poetry run python -m licenseheaders -t ${LICENSE_HEADER} -d word2vec $(args)
 
+.PHONY: build-requirements
+build-requirements:
+	poetry export --without-hashes --only=main --output=./serverless/requirements-base.txt
+	poetry export --without-hashes --only=main,ai --output=./serverless/requirements-ai.txt
+
 .PHONY: poetry-ensure-installed
 poetry-ensure-installed:
 	sh ./tools/poetry_ensure_installed.sh
