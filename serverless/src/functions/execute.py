@@ -35,7 +35,6 @@ job_table = dynamodb.Table(JOBS_TABLE_NAME)
 
 
 def handler(event, context):
-
     for record in event["Records"]:
         request = json.loads(str(record["body"]))
         lesson = request["lesson"]

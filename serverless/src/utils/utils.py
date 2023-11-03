@@ -63,8 +63,8 @@ def to_camelcase(d: dict) -> dict:
     for k, v in d.items():
         if isinstance(v, dict):
             new_d[underscore_to_camel(k)] = to_camelcase(v)
-        elif isinstance(v, list):
-            new_d[underscore_to_camel(k)] = [to_camelcase(x) for x in v]
+        elif isinstance(v, list): 
+            new_d[underscore_to_camel(k)] = [to_camelcase(x) for x in v] # type: ignore
         else:
             new_d[underscore_to_camel(k)] = v
     return new_d

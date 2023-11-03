@@ -41,8 +41,6 @@ poetry-ensure-installed:
 
 .PHONY: test
 test: $(VENV)
-	cd $(ROOT)/shared/ \
-		&& $(MAKE) installed/word2vec.bin
 	poetry run	coverage run \
 		--omit="$(PWD)/tests" \
 		-m py.test -vv $(args)
