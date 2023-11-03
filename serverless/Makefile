@@ -43,7 +43,7 @@ poetry-ensure-installed:
 test: $(VENV)
 	poetry run	coverage run \
 		--omit="$(PWD)/tests" \
-		-m py.test -vv $(args)
+		-m pytest -vv $(args)
 
 PHONY: test
 test-not-slow: $(VENV)
