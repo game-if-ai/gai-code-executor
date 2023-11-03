@@ -42,7 +42,7 @@ LICENSE_HEADER:
 .PHONY: license
 license: LICENSE LICENSE_HEADER $(VENV)
 	poetry run python -m licenseheaders -t ${LICENSE_HEADER} -d serverless/src $(args)
-	poetry run python -m licenseheaders -t ${LICENSE_HEADER} -d serverless/tests $(args)
+	poetry run python -m licenseheaders -t ${LICENSE_HEADER} -d serverless/test $(args)
 	poetry run python -m licenseheaders -t ${LICENSE_HEADER} -d cicd $(args)
 	poetry run python -m licenseheaders -t ${LICENSE_HEADER} -d tools $(args)
 	poetry run python -m licenseheaders -t ${LICENSE_HEADER} -d word2vec $(args)
