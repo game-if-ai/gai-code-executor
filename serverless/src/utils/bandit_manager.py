@@ -9,6 +9,7 @@ from os import mkdir, path, system
 from typing import Any, List, Dict, Tuple
 from dataclass_wizard import JSONWizard
 from dataclasses import dataclass, field
+from shutil import rmtree
 
 CODE_FILE_NAME = "code.py"
 OUTPUT_FILE_NAME = "output.json"
@@ -56,6 +57,7 @@ def scan_user_code(code_as_string: str) -> Tuple[bool, BanditResult]:
     directory = write_python_file(code_as_string)
     run_bandit(directory)
     results = read_output(directory)
+    rmtree(directory)
     if evaluate_bandit_results(results):
         return (True, results)
     else:
