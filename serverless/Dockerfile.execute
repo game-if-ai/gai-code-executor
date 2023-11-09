@@ -8,5 +8,4 @@ ENV PATH="/app/bin:${PATH}"
 COPY requirements-ai.txt ./requirements.txt
 # RUN python -m pip install --upgrade pip
 RUN pip install --no-cache -r requirements.txt
-COPY functions/evaluate.py ./
 COPY src src

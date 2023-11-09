@@ -49,7 +49,7 @@ license: LICENSE LICENSE_HEADER $(VENV)
 
 .PHONY: build-requirements
 build-requirements:
-	poetry export --without-hashes --only=main --output=./serverless/requirements-base.txt
+	poetry export --without-hashes --only=main --output=./serverless/requirements.txt
 	poetry export --without-hashes --only=main,ai --output=./serverless/requirements-ai.txt
 
 .PHONY: poetry-ensure-installed

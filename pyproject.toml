@@ -13,6 +13,7 @@ boto3 = "^1.28.60"
 boto3-type-annotations = "^0.3.1"
 python-dotenv = "^1.0.0"
 requests = "^2.31.0"
+dataclass-wizard = "^0.22.2"
 
 [tool.poetry.group.lint.dependencies]
 pep8-naming = "^0.13.3"
@@ -28,6 +29,7 @@ licenseheaders = {git = "https://github.com/kycarr/licenseheaders.git"}
 
 [tool.poetry.group.ai.dependencies]
 scikit-learn = "^1.3.1"
+bandit = "^1.7.5"
 
 
 [tool.poetry.group.dev.dependencies]
