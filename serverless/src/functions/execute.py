@@ -10,6 +10,7 @@ import os
 import boto3
 from src.utils.utils import require_env
 from src.utils.logger import get_logger
+from src.utils.executor import execute_code
 
 log = get_logger("execute")
 shared_root = os.environ.get("SHARED_ROOT") or "shared"
@@ -27,18 +28,19 @@ job_table = dynamodb.Table(JOBS_TABLE_NAME)
 def handler(event, context):
     for record in event["Records"]:
         request = json.loads(str(record["body"]))
-        # code = request["code"]
+        code = request["code"]
         # ping = request["ping"] if "ping" in request else False
         update_status(request["id"], "IN_PROGRESS")
 
         try:
-            update_status(request["id"], "SUCCESS")
+            result = execute_code(code)
+            update_status(request["id"], "SUCCESS", result)
         except Exception as e:
             log.exception(e)
-            update_status(request["id"], "FAILURE")
+            update_status(request["id"], "FAILURE", e.args.__str__())
 
 
-def update_status(id, status):
+def update_status(id, status, result=""):
     job_table.update_item(
         Key={"id": id},
         # status is reserved, workaround according to:

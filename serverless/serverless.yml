@@ -7,7 +7,6 @@ plugins:
   - serverless-domain-manager
   - serverless-layers
   - serverless-deployment-bucket
-
 custom:
   domain:
     dev: api-dev.gameifai.org
@@ -37,7 +36,7 @@ custom:
   serverless-layers:
     - dependencies:
         layersDeploymentBucket: ${self:provider.deploymentBucket.name}
-        dependenciesPath: ./requirements-base.txt
+        dependenciesPath: ./requirements.txt
         compatibleRuntimes:
           - python3.11
         functions:
