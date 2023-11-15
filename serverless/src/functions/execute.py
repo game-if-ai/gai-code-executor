@@ -45,12 +45,13 @@ def update_status(id, status, result=""):
         Key={"id": id},
         # status is reserved, workaround according to:
         # https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.ExpressionAttributeNames.html
-        UpdateExpression="set #status = :s, updated = :u",
+        UpdateExpression="set #status = :s, updated = :u, result = :res",
         ExpressionAttributeNames={
             "#status": "status",
         },
         ExpressionAttributeValues={
             ":s": status,
             ":u": datetime.datetime.now().isoformat(),
+            ":res": result,
         },
     )

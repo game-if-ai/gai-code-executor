@@ -32,9 +32,9 @@ def handler(event, context):
             "id": item["id"],
             "status": item["status"],
             "state": item["status"],
-            "code": item["code"],
             # only added after trainjob runs
             **({"updated": item["updated"]} if "updated" in item else {}),
+            **({"result": item["result"]} if "result" in item else {}),
             "statusUrl": f"/execute/status/{status_id}",
         }
     else:
