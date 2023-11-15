@@ -10,7 +10,7 @@ from src.utils.bandit_manager import scan_user_code
 
 def execute_code(code: str) -> str:
     try:
-        (code_is_valid, bandit_result) = scan_user_code(code)
+        (code_is_valid, bandit_result_as_string) = scan_user_code(code)
         if code_is_valid:
             local_vars: Dict[str, Any] = {}
             exec(code, globals(), local_vars)
@@ -19,6 +19,6 @@ def execute_code(code: str) -> str:
             else:
                 return "no result variable instantiated.  Could not return result."
         else:
-            return bandit_result.to_json()
+            return bandit_result_as_string
     except Exception as e:
-        return e.args.__str__()
+        return e.__str__()

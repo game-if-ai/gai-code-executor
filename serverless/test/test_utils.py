@@ -4,36 +4,8 @@
 #
 # The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 #
-import pytest
 from os import path
-from test_utils import fixture_path
-from src.utils.executor import execute_code
 
 
-CODE_FILE_NAME = "code.py"
-EXEPECTED_OUTPUT_FILE_NAME = "expected_output.txt"
-
-
-def test_coverage():
-    assert True
-
-
-@pytest.mark.parametrize(
-    "sample_code",
-    [
-        ("helloworld"),
-    ],
-)
-def test_code_execution(sample_code: str):
-    code_file_path = path.join(fixture_path(sample_code), CODE_FILE_NAME)
-    expected_output_file_path = path.join(
-        fixture_path(sample_code), EXEPECTED_OUTPUT_FILE_NAME
-    )
-    with open(code_file_path, "r") as code_file:
-        code = code_file.read()
-
-    with open(expected_output_file_path, "r") as expected_output_file:
-        expected_output = expected_output_file.read()
-
-    result = execute_code(code)
-    assert result == expected_output
+def fixture_path(p: str) -> str:
+    return path.abspath(path.join(".", "test", "fixtures", p))

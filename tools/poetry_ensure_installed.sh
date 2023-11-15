@@ -7,14 +7,6 @@
 ##
 
 
-if [ -x "$(command -v pyenv)" ]; then
-    # if we're using pyenv,
-    # make sure the version specified in the .python-version file
-    # is installed
-    pyenv install --skip-existing
-fi
-
-
 if ! [ -x "$(command -v poetry)" ]; then
     # if poetry is not installed (and we're on linux or mac), then install it
     if ! [ -x "$(command -v curl)" ]; then

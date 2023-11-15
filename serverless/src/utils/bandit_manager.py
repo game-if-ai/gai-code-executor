@@ -6,7 +6,7 @@
 #
 from uuid import uuid4
 from os import mkdir, path, system
-from typing import Any, List, Dict, Tuple
+from typing import Dict, Tuple
 from dataclass_wizard import JSONWizard
 from dataclasses import dataclass, field
 from shutil import rmtree
@@ -17,9 +17,7 @@ OUTPUT_FILE_NAME = "output.json"
 
 @dataclass
 class BanditResult(JSONWizard):
-    errors: List[Any]
     generated_at: str
-    results: Any
     metrics: Dict[str, Dict[str, int]] = field(default_factory=dict)
 
 
@@ -39,27 +37,28 @@ def run_bandit(directory: str):
     )
 
 
-def read_output(directory: str) -> BanditResult:
+def read_output(directory: str) -> Tuple[BanditResult, str]:
     file_path = path.join(directory, OUTPUT_FILE_NAME)
     if path.exists(file_path):
         with open(file_path, "r") as file:
-            result = BanditResult.from_json(file)
-            return result
+            result_as_string = file.read()
+            result = BanditResult.from_json(result_as_string)
+            return (result, result_as_string)
     else:
         raise RuntimeError("could not read result of Bandit analysis")
 
 
 def evaluate_bandit_results(results: BanditResult) -> bool:
-    return results.metrics["_total"]["SEVERITY.HIGH"] == 0
+    return results.metrics["_totals"]["SEVERITY.HIGH"] == 0
 
 
-def scan_user_code(code_as_string: str) -> Tuple[bool, BanditResult]:
+def scan_user_code(code_as_string: str) -> Tuple[bool, str]:
     directory = write_python_file(code_as_string)
     run_bandit(directory)
-    results = read_output(directory)
+    (results, results_as_string) = read_output(directory)
     rmtree(directory)
     if evaluate_bandit_results(results):
-        return (True, results)
+        return (True, results_as_string)
     else:
         print(f"code has security vulnerabilities in it: {results.to_json()}")
-        return (False, results)
+        return (False, results_as_string)
