@@ -29,7 +29,7 @@ def handler(event, context):
     for record in event["Records"]:
         request = json.loads(str(record["body"]))
         code = request["code"]
-        lesson = request["lesson"]
+        # lesson = request["lesson"]
         # ping = request["ping"] if "ping" in request else False
         update_status(request["id"], "IN_PROGRESS")
 
