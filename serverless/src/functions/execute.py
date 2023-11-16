@@ -11,6 +11,14 @@ import boto3
 from src.utils.utils import require_env
 from src.utils.logger import get_logger
 from src.utils.executor import execute_code
+from src.utils.s3_file_downloader import (
+    LessonDownloader,
+    CafeDownloader,
+    FruitPickerDownloader,
+    NeuralMachineTranslationDownloader,
+    PlanesDownloader,
+)
+from typing import Dict
 
 log = get_logger("execute")
 shared_root = os.environ.get("SHARED_ROOT") or "shared"
@@ -24,16 +32,24 @@ aws_region = os.environ.get("REGION", "us-east-1")
 dynamodb = boto3.resource("dynamodb", region_name=aws_region)
 job_table = dynamodb.Table(JOBS_TABLE_NAME)
 
+LESSON_DOWNLOADERS: Dict[str, LessonDownloader] = {
+    "planes": PlanesDownloader(),
+    "cafe": CafeDownloader(),
+    "neural_machine_translation": NeuralMachineTranslationDownloader(),
+    "fruitpicker": FruitPickerDownloader(),
+}
+
 
 def handler(event, context):
     for record in event["Records"]:
         request = json.loads(str(record["body"]))
         code = request["code"]
-        # lesson = request["lesson"]
+        lesson = request["lesson"]
         # ping = request["ping"] if "ping" in request else False
         update_status(request["id"], "IN_PROGRESS")
 
         try:
+            LESSON_DOWNLOADERS[lesson].download_files_for_lesson(MODELS_BUCKET, s3)
             (result, console) = execute_code(code)
             update_status(request["id"], "SUCCESS", result, console)
         except Exception as e:
