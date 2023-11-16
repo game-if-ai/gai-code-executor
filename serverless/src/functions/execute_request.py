@@ -41,21 +41,23 @@ def handler(event, context):
         body = event["body"]
     execute_request = json.loads(body)
 
-    if "code" not in execute_request:
+    if "lesson" not in execute_request:
         return create_json_response(
             400,
             {
-                "error": "Bad request: Need lesson in json body, or specify to train default via 'train_default' body param"
+                "error": "Bad request: Need lesson in json body"
             },
             event,
         )
     code = execute_request["code"] if "code" in execute_request else ""
+    lesson = execute_request["lesson"]
     ping = execute_request["ping"] if "ping" in execute_request else False
 
     job_id = str(uuid.uuid4())
     execute_job = {
         "id": job_id,
         "code": code,
+        "lesson": lesson,
         "ping": ping,
         "status": "QUEUED",
         "created": datetime.datetime.now().isoformat(),
