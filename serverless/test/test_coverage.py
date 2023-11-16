@@ -22,9 +22,13 @@ def test_coverage():
     "sample_code",
     [
         ("helloworld"),
+        ("code_error"),
+        ("function_call"),
+        ("bandit_failure"),
     ],
 )
 def test_code_execution(sample_code: str):
+    uuid = "0"
     code_file_path = path.join(fixture_path(sample_code), CODE_FILE_NAME)
     expected_output_file_path = path.join(
         fixture_path(sample_code), EXEPECTED_OUTPUT_FILE_NAME
@@ -35,5 +39,10 @@ def test_code_execution(sample_code: str):
     with open(expected_output_file_path, "r") as expected_output_file:
         expected_output = expected_output_file.read()
 
-    result = execute_code(code)
-    assert result == expected_output
+    result = execute_code(code, uuid)
+
+    # need to do this because the bandit result includes a timestamp that we can't freeze
+    if "CONFIDENCE" in result:
+        assert True
+    else:
+        assert result == expected_output

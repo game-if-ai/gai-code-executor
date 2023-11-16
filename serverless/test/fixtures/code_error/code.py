@@ -4,21 +4,4 @@
 #
 # The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 #
-from typing import Dict, Any
-from src.utils.bandit_manager import scan_user_code
-
-
-def execute_code(code: str, uuid: str = "") -> str:
-    try:
-        (code_is_valid, bandit_result_as_string) = scan_user_code(code, uuid)
-        if code_is_valid:
-            local_vars: Dict[str, Any] = {}
-            exec(code, globals(), local_vars)
-            if "result" in local_vars.keys():
-                return local_vars["result"]
-            else:
-                return "no result variable instantiated.  Could not return result."
-        else:
-            return bandit_result_as_string
-    except Exception as e:
-        return e.__str__()
+result = non_existent_variable

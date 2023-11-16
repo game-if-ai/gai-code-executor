@@ -86,4 +86,4 @@ test-license: LICENSE LICENSE_HEADER
 
 .PHONY: test-types
 test-types: $(VENV)
-	poetry run mypy serverless
+	poetry run mypy serverless --exclude fixtures

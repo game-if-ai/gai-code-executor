@@ -21,8 +21,12 @@ class BanditResult(JSONWizard):
     metrics: Dict[str, Dict[str, int]] = field(default_factory=dict)
 
 
-def write_python_file(code_as_string: str) -> str:
-    directory = path.join(path.curdir, uuid4().__str__())
+def write_python_file(code_as_string: str, uuid: str = "") -> str:
+    if uuid != "":
+        directory = path.join(path.curdir, uuid)
+    else:
+        directory = path.join(path.curdir, uuid4().__str__())
+    print(directory)
     mkdir(directory)
     file_path = path.join(directory, CODE_FILE_NAME)
     with open(file_path, "w") as file:
@@ -49,16 +53,20 @@ def read_output(directory: str) -> Tuple[BanditResult, str]:
 
 
 def evaluate_bandit_results(results: BanditResult) -> bool:
-    return results.metrics["_totals"]["SEVERITY.HIGH"] == 0
+    return (
+        results.metrics["_totals"]["SEVERITY.HIGH"] == 0
+        and results.metrics["_totals"]["SEVERITY.MEDIUM"] == 0
+        and results.metrics["_totals"]["SEVERITY.LOW"] == 0
+    )
 
 
-def scan_user_code(code_as_string: str) -> Tuple[bool, str]:
-    directory = write_python_file(code_as_string)
+def scan_user_code(code_as_string: str, uuid: str = "") -> Tuple[bool, str]:
+    directory = write_python_file(code_as_string, uuid)
     run_bandit(directory)
     (results, results_as_string) = read_output(directory)
     rmtree(directory)
     if evaluate_bandit_results(results):
         return (True, results_as_string)
     else:
-        print(f"code has security vulnerabilities in it: {results.to_json()}")
+        print(f"code has security vulnerabilities in it: {results_as_string}")
         return (False, results_as_string)
