@@ -44,9 +44,7 @@ def handler(event, context):
     if "lesson" not in execute_request:
         return create_json_response(
             400,
-            {
-                "error": "Bad request: Need lesson in json body"
-            },
+            {"error": "Bad request: Need lesson in json body"},
             event,
         )
     code = execute_request["code"] if "code" in execute_request else ""
