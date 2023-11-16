@@ -4,21 +4,31 @@
 #
 # The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 #
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
+from contextlib import redirect_stdout
+from io import StringIO
 from src.utils.bandit_manager import scan_user_code
 
 
-def execute_code(code: str, uuid: str = "") -> str:
+def execute_code(code: str, uuid: str = "") -> Tuple[str, str]:
     try:
         (code_is_valid, bandit_result_as_string) = scan_user_code(code, uuid)
         if code_is_valid:
             local_vars: Dict[str, Any] = {}
-            exec(code, globals(), local_vars)
+            string_io = StringIO()
+            console_output = ""
+            with redirect_stdout(string_io):
+                exec(code, globals(), local_vars)
+                console_output = string_io.getvalue()
+
             if "result" in local_vars.keys():
-                return local_vars["result"]
+                return (local_vars["result"], console_output)
             else:
-                return "no result variable instantiated.  Could not return result."
+                return (
+                    f"no result variable instantiated.  Could not return result.  local vars:\n {str(local_vars)}",
+                    console_output,
+                )
         else:
-            return bandit_result_as_string
+            return (bandit_result_as_string, "")
     except Exception as e:
-        return e.__str__()
+        return (e.__str__(), console_output)

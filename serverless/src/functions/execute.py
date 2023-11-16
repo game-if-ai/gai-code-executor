@@ -33,19 +33,19 @@ def handler(event, context):
         update_status(request["id"], "IN_PROGRESS")
 
         try:
-            result = execute_code(code)
-            update_status(request["id"], "SUCCESS", result)
+            (result, console) = execute_code(code)
+            update_status(request["id"], "SUCCESS", result, console)
         except Exception as e:
             log.exception(e)
             update_status(request["id"], "FAILURE", e.args.__str__())
 
 
-def update_status(id, status, result=""):
+def update_status(id, status, result="", console=""):
     job_table.update_item(
         Key={"id": id},
         # status is reserved, workaround according to:
         # https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.ExpressionAttributeNames.html
-        UpdateExpression="set #status = :s, updated = :u, result = :res",
+        UpdateExpression="set #status = :s, updated = :u, result = :res, console = :cons",
         ExpressionAttributeNames={
             "#status": "status",
         },
@@ -53,5 +53,6 @@ def update_status(id, status, result=""):
             ":s": status,
             ":u": datetime.datetime.now().isoformat(),
             ":res": result,
+            ":cons": console,
         },
     )

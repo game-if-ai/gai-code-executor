@@ -26,7 +26,6 @@ def write_python_file(code_as_string: str, uuid: str = "") -> str:
         directory = path.join(path.curdir, uuid)
     else:
         directory = path.join(path.curdir, uuid4().__str__())
-    print(directory)
     mkdir(directory)
     file_path = path.join(directory, CODE_FILE_NAME)
     with open(file_path, "w") as file:

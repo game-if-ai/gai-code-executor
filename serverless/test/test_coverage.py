@@ -12,6 +12,7 @@ from src.utils.executor import execute_code
 
 CODE_FILE_NAME = "code.py"
 EXEPECTED_OUTPUT_FILE_NAME = "expected_output.txt"
+CONSOLE_FILE_NAME = "console.txt"
 
 
 def test_coverage():
@@ -25,6 +26,8 @@ def test_coverage():
         ("code_error"),
         ("function_call"),
         ("bandit_failure"),
+        ("no_result"),
+        ("print_statements"),
     ],
 )
 def test_code_execution(sample_code: str):
@@ -33,16 +36,23 @@ def test_code_execution(sample_code: str):
     expected_output_file_path = path.join(
         fixture_path(sample_code), EXEPECTED_OUTPUT_FILE_NAME
     )
+    console_file_path = path.join(fixture_path(sample_code), CONSOLE_FILE_NAME)
+
     with open(code_file_path, "r") as code_file:
         code = code_file.read()
 
     with open(expected_output_file_path, "r") as expected_output_file:
         expected_output = expected_output_file.read()
 
-    result = execute_code(code, uuid)
+    with open(console_file_path, "r") as expected_console_file:
+        expected_console = expected_console_file.read()
 
+    (result, console_output) = execute_code(code, uuid)
+    print(console_output)
     # need to do this because the bandit result includes a timestamp that we can't freeze
     if "CONFIDENCE" in result:
         assert True
     else:
         assert result == expected_output
+
+    assert expected_console == console_output

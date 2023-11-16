@@ -1,0 +1,2 @@
+no result variable instantiated.  Could not return result.  local vars:
+ {'no_result': 'penguins'}
