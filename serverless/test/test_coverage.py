@@ -29,6 +29,7 @@ def test_coverage():
         ("no_result"),
         ("print_statements"),
         ("cafe"),
+        ("fruitpicker"),
     ],
 )
 def test_code_execution(sample_code: str):
