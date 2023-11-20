@@ -28,6 +28,7 @@ def test_coverage():
         ("bandit_failure"),
         ("no_result"),
         ("print_statements"),
+        ("cafe"),
     ],
 )
 def test_code_execution(sample_code: str):
