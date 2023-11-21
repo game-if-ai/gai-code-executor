@@ -32,6 +32,7 @@ def test_coverage():
         ("cafe", False),
         ("fruitpicker", False),
         ("planes", False),
+        ("class", False),
     ],
 )
 def test_code_execution(sample_code: str, expect_security_failure: bool):
