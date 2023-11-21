@@ -20,19 +20,21 @@ def test_coverage():
 
 
 @pytest.mark.parametrize(
-    "sample_code",
+    "sample_code, expect_security_failure",
     [
-        ("helloworld"),
-        ("code_error"),
-        ("function_call"),
-        ("bandit_failure"),
-        ("no_result"),
-        ("print_statements"),
-        ("cafe"),
-        ("fruitpicker"),
+        ("helloworld", False),
+        ("code_error", False),
+        ("function_call", False),
+        ("bandit_failure", True),
+        ("no_result", False),
+        ("print_statements", False),
+        ("nested_function", False),
+        ("cafe", False),
+        ("fruitpicker", False),
+        ("planes", False),
     ],
 )
-def test_code_execution(sample_code: str):
+def test_code_execution(sample_code: str, expect_security_failure: bool):
     uuid = "0"
     code_file_path = path.join(fixture_path(sample_code), CODE_FILE_NAME)
     expected_output_file_path = path.join(
@@ -52,7 +54,7 @@ def test_code_execution(sample_code: str):
     (result, console_output) = execute_code(code, uuid)
     print(console_output)
     # need to do this because the bandit result includes a timestamp that we can't freeze
-    if "CONFIDENCE" in result:
+    if "CONFIDENCE" in result and expect_security_failure:
         assert True
     else:
         assert result == expected_output

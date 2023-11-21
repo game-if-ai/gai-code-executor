@@ -4,12 +4,17 @@
 #
 # The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 #
-### This cell is uneditable ###
-import json, random
+import json as jsonn, random as randomn
+
+global random, json
+random = randomn
+json = jsonn
 import numpy as np
 from sklearn.model_selection import train_test_split
 from test_utils import fixture_path
 import os
+
+global fruits
 
 # load fruit data:
 fruit_traits = ["fruit", "color", "shape"]
@@ -19,13 +24,6 @@ fruits = json.load(fruits_file)
 
 # Your classifier code goes here:
 def classify(fruit, label):
-    import random, json
-    import os
-    from test_utils import fixture_path
-
-    fruits_file = open(os.path.join(fixture_path("fruitpicker"), "fruits.json"))
-    fruits = json.load(fruits_file)
-
     correctAnswer = random.randint(1, 10) < 5
     output = {
         "fruit": fruit,

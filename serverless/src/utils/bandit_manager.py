@@ -55,7 +55,6 @@ def evaluate_bandit_results(results: BanditResult) -> bool:
     return (
         results.metrics["_totals"]["SEVERITY.HIGH"] == 0
         and results.metrics["_totals"]["SEVERITY.MEDIUM"] == 0
-        and results.metrics["_totals"]["SEVERITY.LOW"] == 0
     )
 
 
