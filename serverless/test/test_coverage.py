@@ -52,7 +52,6 @@ def test_code_execution(sample_code: str, expect_security_failure: bool):
         expected_console = expected_console_file.read()
 
     (result, console_output) = execute_code(code, uuid)
-    print(console_output)
     # need to do this because the bandit result includes a timestamp that we can't freeze
     if "CONFIDENCE" in result and expect_security_failure:
         assert True
