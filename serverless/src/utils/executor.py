@@ -15,16 +15,18 @@ def execute_code(code: str, uuid: str = "") -> Tuple[str, str]:
         (code_is_valid, bandit_result_as_string) = scan_user_code(code, uuid)
         if code_is_valid:
             local_vars: Dict[str, Any] = {}
-            global_vars: Dict[str, Any] = {}
             string_io = StringIO()
             console_output = ""
             with redirect_stdout(string_io):
-                exec(code, global_vars, local_vars)
+                exec(code, local_vars, local_vars)
                 console_output = string_io.getvalue()
 
             if "result" in local_vars.keys():
                 return (local_vars["result"], console_output)
             else:
+                local_vars.pop(
+                    "__builtins__"
+                )  # don't display the builtin variables.  It's a lot of information we don't need
                 return (
                     f"no result variable instantiated.  Could not return result.  local vars:\n {str(local_vars)}",
                     console_output,

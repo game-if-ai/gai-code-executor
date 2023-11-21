@@ -54,7 +54,7 @@ def train():
 
 
 ### This cell is uneditable ###
-globals().update(locals())
+# globals().update(locals())
 outputs = []
 for run in inputs:
     output = []

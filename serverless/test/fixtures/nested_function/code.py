@@ -15,5 +15,4 @@ def execute_function() -> str:
     return fun()
 
 
-globals().update(locals())
 result = execute_function()
