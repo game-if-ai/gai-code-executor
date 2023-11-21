@@ -39,6 +39,6 @@ def print_foo():
 
 
 print_foo()
-foo.bar.static_var = "p"
+Bar.static_var = "p"
 print(str(foo.bar2.static_var))
 result = str(foo.bar.root())
