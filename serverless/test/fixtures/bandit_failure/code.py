@@ -6,4 +6,4 @@
 #
 import os
 
-result = str(os.system("bandit"))
+exec("penguisn")

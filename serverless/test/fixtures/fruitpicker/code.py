@@ -16,6 +16,30 @@ fruit_traits = ["fruit", "color", "shape"]
 fruits_file = open(os.path.join(fixture_path("fruitpicker"), "fruits.json"))
 fruits = json.load(fruits_file)
 
+
+# Your classifier code goes here:
+def classify(fruit, label):
+    import random, json
+    import os
+    from test_utils import fixture_path
+
+    fruits_file = open(os.path.join(fixture_path("fruitpicker"), "fruits.json"))
+    fruits = json.load(fruits_file)
+
+    correctAnswer = random.randint(1, 10) < 5
+    output = {
+        "fruit": fruit,
+        "label": label,
+        "inputText": fruit["description"],
+        "realLabel": fruit["traits"][label],
+        "classifierLabel": fruit["traits"][label]
+        if correctAnswer
+        else fruits[random.randint(0, len(fruits) - 1)]["traits"][label],
+        "confidence": random.uniform(0, 1),
+    }
+    return output
+
+
 # split into training and testing data
 random.shuffle(fruits)
 training_data, testing_data = train_test_split(fruits)
@@ -34,22 +58,7 @@ for x in range(0, 5):
 # Your training code goes here:
 def train():
     print("do something")
-
-
-# Your classifier code goes here:
-def classify(fruit, label):
-    correctAnswer = random.randint(1, 10) < 5
-    output = {
-        "fruit": fruit,
-        "label": label,
-        "inputText": fruit["description"],
-        "realLabel": fruit["traits"][label],
-        "classifierLabel": fruit["traits"][label]
-        if correctAnswer
-        else fruits[random.randint(0, len(fruits) - 1)]["traits"][label],
-        "confidence": random.uniform(0, 1),
-    }
-    return output
+    return
 
 
 ### This cell is uneditable ###
