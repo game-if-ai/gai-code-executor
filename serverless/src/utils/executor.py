@@ -15,10 +15,11 @@ def execute_code(code: str, uuid: str = "") -> Tuple[str, str]:
         (code_is_valid, bandit_result_as_string) = scan_user_code(code, uuid)
         if code_is_valid:
             local_vars: Dict[str, Any] = {}
+            global_vars: Dict[str, Any] = {}
             string_io = StringIO()
             console_output = ""
             with redirect_stdout(string_io):
-                exec(code, globals(), local_vars)
+                exec(code, global_vars, local_vars)
                 console_output = string_io.getvalue()
 
             if "result" in local_vars.keys():
