@@ -4,8 +4,6 @@
 #
 # The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 #
-global g
-global fun
 g = ["penguins"]
 
 
@@ -17,4 +15,5 @@ def execute_function() -> str:
     return fun()
 
 
+globals().update(locals())
 result = execute_function()

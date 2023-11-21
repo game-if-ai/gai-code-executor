@@ -4,17 +4,11 @@
 #
 # The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 #
-import json as jsonn, random as randomn
-
-global random, json
-random = randomn
-json = jsonn
+import json, random
 import numpy as np
 from sklearn.model_selection import train_test_split
 from test_utils import fixture_path
 import os
-
-global fruits
 
 # load fruit data:
 fruit_traits = ["fruit", "color", "shape"]
@@ -60,7 +54,7 @@ def train():
 
 
 ### This cell is uneditable ###
-
+globals().update(locals())
 outputs = []
 for run in inputs:
     output = []
