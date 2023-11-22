@@ -6,6 +6,8 @@
 #
 from abc import ABC, abstractmethod
 from typing import Any
+import shutil
+import os
 
 
 class LessonDownloader(ABC):
@@ -36,6 +38,13 @@ class NeuralMachineTranslationDownloader(LessonDownloader):
             "neural_machine_translation/small_vocab_fr",
             "./small_vocab_fr",
         )
+        s3.download_file(
+            models_bucket,
+            "neural_machine_translation/translation_tf.zip",
+            "./translation_tf.zip",
+        )
+        os.mkdir("./translation.tf")
+        shutil.unpack_archive("./translation_tf.zip", "./translation.tf", "zip")
 
 
 class PlanesDownloader(LessonDownloader):
