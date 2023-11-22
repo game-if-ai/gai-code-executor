@@ -1,0 +1,12 @@
+X Raw Shape: (137861, 15)
+Y Raw Shape: (137861, 21)
+English
+ * preproc_english_sentences_type <class 'numpy.ndarray'>
+ * preproc_english_sentences_shape (137861, 21, 1)
+French
+ * preproc_french_sentences_type <class 'numpy.ndarray'>
+ * preproc_french_sentences_shape (137861, 21, 1)
+Test Case - English to French
+ * English sentence: new jersey is sometimes quiet during autumn , and it is snowy in april .
+ * Actual translation: new jersey est parfois calme pendant l' automne , et il est neigeux en avril .
+ * Predicted translation: new jersey est jamais chaud en l' et il est est en en        
