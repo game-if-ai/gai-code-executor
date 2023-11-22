@@ -33,6 +33,7 @@ def test_coverage():
         ("fruitpicker", False),
         ("planes", False),
         ("class", False),
+        ("nmt", False),
     ],
 )
 def test_code_execution(sample_code: str, expect_security_failure: bool):

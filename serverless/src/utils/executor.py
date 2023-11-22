@@ -34,5 +34,4 @@ def execute_code(code: str, uuid: str = "") -> Tuple[str, str]:
         else:
             return (bandit_result_as_string, "")
     except Exception as e:
-        print(local_vars)
         return (e.__str__(), console_output)
