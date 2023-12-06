@@ -34,6 +34,7 @@ def test_coverage():
         ("planes", False),
         ("class", False),
         ("nmt", False),
+        ("http_request", True),
     ],
 )
 def test_code_execution(sample_code: str, expect_security_failure: bool):

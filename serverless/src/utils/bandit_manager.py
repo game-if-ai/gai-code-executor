@@ -14,6 +14,8 @@ from shutil import rmtree
 CODE_FILE_NAME = "code.py"
 OUTPUT_FILE_NAME = "output.json"
 
+BLACKLISTED_WORDS = ["requests", "urllib", "urllib3", "http", "https"]
+
 
 @dataclass
 class BanditResult(JSONWizard):
@@ -58,13 +60,25 @@ def evaluate_bandit_results(results: BanditResult) -> bool:
     )
 
 
+def check_for_blacklisted_libraries(code_as_string: str) -> bool:
+    for entry in BLACKLISTED_WORDS:
+        if entry in code_as_string:
+            return False
+
+    return True
+
+
 def scan_user_code(code_as_string: str, uuid: str = "") -> Tuple[bool, str]:
     directory = write_python_file(code_as_string, uuid)
     run_bandit(directory)
     (results, results_as_string) = read_output(directory)
     rmtree(directory)
-    if evaluate_bandit_results(results):
+    if evaluate_bandit_results(results) and check_for_blacklisted_libraries(
+        code_as_string
+    ):
         return (True, results_as_string)
     else:
-        print(f"code has security vulnerabilities in it: {results_as_string}")
+        print(
+            f"code has security vulnerabilities in it: {results_as_string}\n\nIf no vulnerabilities were found you may have used blacklisted words:{BLACKLISTED_WORDS}"
+        )
         return (False, results_as_string)
