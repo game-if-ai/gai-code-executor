@@ -8,20 +8,19 @@ import json
 import datetime
 import os
 import boto3
-from src.utils import require_env
-from src.logger import get_logger
-
-from opentutor_classifier.dao import (
-    find_data_dao,
-    DEFAULT_LESSON_NAME,
+from src.utils.utils import require_env
+from src.utils.logger import get_logger
+from src.utils.executor import execute_code
+from src.utils.s3_file_downloader import (
+    LessonDownloader,
+    CafeDownloader,
+    FruitPickerDownloader,
+    NeuralMachineTranslationDownloader,
+    PlanesDownloader,
 )
-from opentutor_classifier import (
-    ClassifierFactory,
-    TrainingConfig,
-    ARCH_DEFAULT,
-)
+from typing import Dict
 
-log = get_logger("train-job")
+log = get_logger("execute")
 shared_root = os.environ.get("SHARED_ROOT") or "shared"
 log.info(f"shared: {shared_root}")
 JOBS_TABLE_NAME = require_env("JOBS_TABLE_NAME")
@@ -33,51 +32,44 @@ aws_region = os.environ.get("REGION", "us-east-1")
 dynamodb = boto3.resource("dynamodb", region_name=aws_region)
 job_table = dynamodb.Table(JOBS_TABLE_NAME)
 
+LESSON_DOWNLOADERS: Dict[str, LessonDownloader] = {
+    "planes": PlanesDownloader(),
+    "cafe": CafeDownloader(),
+    "neural_machine_translation": NeuralMachineTranslationDownloader(),
+    "fruitpicker": FruitPickerDownloader(),
+}
+
 
 def handler(event, context):
     for record in event["Records"]:
         request = json.loads(str(record["body"]))
+        code = request["code"]
         lesson = request["lesson"]
-        arch = request["arch"] if request["arch"] is not None else ARCH_DEFAULT
-        should_train_default = request["train_default"]
-        lesson_name = DEFAULT_LESSON_NAME if should_train_default else lesson
         # ping = request["ping"] if "ping" in request else False
         update_status(request["id"], "IN_PROGRESS")
 
         try:
-            dao = find_data_dao()
-            config = TrainingConfig(shared_root=shared_root)
-            fac = ClassifierFactory()
-
-            if should_train_default:
-                data = dao.find_default_training_data()
-                training = fac.new_training(config, arch=arch)
-                training.train_default(data, dao)
-            else:
-                data = dao.find_training_input(lesson_name)
-                training = fac.new_training(config, arch=arch)
-                training.train(data, dao)
-
-            # upload model
-            training.upload_model(s3, lesson_name, MODELS_BUCKET)
-
-            update_status(request["id"], "SUCCESS")
+            LESSON_DOWNLOADERS[lesson].download_files_for_lesson(MODELS_BUCKET, s3)
+            (result, console) = execute_code(code)
+            update_status(request["id"], "SUCCESS", result, console)
         except Exception as e:
             log.exception(e)
-            update_status(request["id"], "FAILURE")
+            update_status(request["id"], "FAILURE", e.args.__str__())
 
 
-def update_status(id, status):
+def update_status(id, status, result="", console=""):
     job_table.update_item(
         Key={"id": id},
         # status is reserved, workaround according to:
         # https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.ExpressionAttributeNames.html
-        UpdateExpression="set #status = :s, updated = :u",
+        UpdateExpression="set #status = :s, updated = :u, result = :res, console = :cons",
         ExpressionAttributeNames={
             "#status": "status",
         },
         ExpressionAttributeValues={
             ":s": status,
             ":u": datetime.datetime.now().isoformat(),
+            ":res": result,
+            ":cons": console,
         },
     )

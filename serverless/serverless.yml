@@ -7,7 +7,6 @@ plugins:
   - serverless-domain-manager
   - serverless-layers
   - serverless-deployment-bucket
-
 custom:
   domain:
     dev: api-dev.gameifai.org
@@ -27,17 +26,17 @@ custom:
 
   stages:
     dev:
-      WEBACL_ARN: ${ssm:/dev-gameifai/api_firewall_arn, ''}
+      WEBACL_ARN: ${ssm:/shared-gameifai/api_firewall_arn, ''}
     qa:
-      WEBACL_ARN: ${ssm:/qa-gameifai/api_firewall_arn, ''}
+      WEBACL_ARN: ${ssm:/shared-gameifai/api_firewall_arn, ''}
     prod:
-      WEBACL_ARN: ${ssm:/prod-gameifai/api_firewall_arn, ''}
+      WEBACL_ARN: ${ssm:/shared-gameifai/api_firewall_arn, ''}
 
   # serverless-layers requires a deployment bucket to be created before deploying this stack
   serverless-layers:
     - dependencies:
         layersDeploymentBucket: ${self:provider.deploymentBucket.name}
-        dependenciesPath: ./requirements-base.txt
+        dependenciesPath: ./requirements.txt
         compatibleRuntimes:
           - python3.11
         functions:
@@ -179,6 +178,7 @@ resources:
   Conditions:
     AttachFirewall:
       Fn::Or:
+        - Fn::Equals: ['${self:provider.stage}', 'dev']
         - Fn::Equals: ['${self:provider.stage}', 'qa']
         - Fn::Equals: ['${self:provider.stage}', 'prod']
   Resources:

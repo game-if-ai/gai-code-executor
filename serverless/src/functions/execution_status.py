@@ -7,8 +7,8 @@
 import json
 import os
 import boto3
-from src.utils import create_json_response, require_env
-from src.logger import get_logger
+from src.utils.utils import create_json_response, require_env
+from src.utils.logger import get_logger
 
 
 log = get_logger("status")
@@ -32,10 +32,11 @@ def handler(event, context):
             "id": item["id"],
             "status": item["status"],
             "state": item["status"],
-            "lesson": item["lesson"],
             # only added after trainjob runs
             **({"updated": item["updated"]} if "updated" in item else {}),
-            "statusUrl": f"/train/status/{status_id}",
+            **({"result": item["result"]} if "result" in item else {}),
+            **({"console": item["console"]} if "console" in item else {}),
+            "statusUrl": f"/execute/status/{status_id}",
         }
     else:
         data = {

@@ -10,10 +10,10 @@ import uuid
 import datetime
 import os
 import boto3
-from src.utils import create_json_response, require_env
-from src.logger import get_logger
+from src.utils.utils import create_json_response, require_env
+from src.utils.logger import get_logger
 
-log = get_logger("train_request")
+log = get_logger("execute_request")
 JOBS_TABLE_NAME = require_env("JOBS_TABLE_NAME")
 log.info(f"using table {JOBS_TABLE_NAME}")
 JOBS_SQS_NAME = require_env("JOBS_SQS_NAME")
@@ -39,46 +39,39 @@ def handler(event, context):
         body = base64.b64decode(event["body"])
     else:
         body = event["body"]
-    train_request = json.loads(body)
-    should_train_default = (
-        train_request["train_default"] if "train_default" in train_request else False
-    )
+    execute_request = json.loads(body)
 
-    if "lesson" not in train_request and should_train_default is False:
+    if "lesson" not in execute_request:
         return create_json_response(
             400,
-            {
-                "error": "Bad request: Need lesson in json body, or specify to train default via 'train_default' body param"
-            },
+            {"error": "Bad request: Need lesson in json body"},
             event,
         )
-    arch = train_request["arch"] if "arch" in train_request else None
-    lesson = train_request["lesson"] if "lesson" in train_request else "default"
-    ping = train_request["ping"] if "ping" in train_request else False
+    code = execute_request["code"] if "code" in execute_request else ""
+    lesson = execute_request["lesson"]
+    ping = execute_request["ping"] if "ping" in execute_request else False
 
     job_id = str(uuid.uuid4())
-    train_job = {
+    execute_job = {
         "id": job_id,
+        "code": code,
         "lesson": lesson,
         "ping": ping,
-        "train_default": should_train_default,
-        "arch": arch,
         "status": "QUEUED",
         "created": datetime.datetime.now().isoformat(),
         # https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/time-to-live-ttl-before-you-start.html#time-to-live-ttl-before-you-start-formatting
         "ttl": int(datetime.datetime.now().timestamp()) + ttl_sec,
     }
 
-    log.debug(train_job)
-    sqs_msg = sqs.send_message(QueueUrl=queue_url, MessageBody=json.dumps(train_job))
+    log.debug(execute_job)
+    sqs_msg = sqs.send_message(QueueUrl=queue_url, MessageBody=json.dumps(execute_job))
     log.info(sqs_msg)
 
-    job_table.put_item(Item=train_job)
+    job_table.put_item(Item=execute_job)
 
     data = {
         "id": job_id,
-        "lesson": lesson,
         "status": "QUEUED",
-        "statusUrl": f"/train/status/{job_id}",
+        "statusUrl": f"/execute/status/{job_id}",
     }
     return create_json_response(200, data, event)
