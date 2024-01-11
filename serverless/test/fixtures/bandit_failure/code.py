@@ -7,3 +7,8 @@
 import os
 
 exec("penguisn")
+with open("/tmp/test") as r:
+    r.read()
+
+with open("/tmp/test") as r:
+    r.read()

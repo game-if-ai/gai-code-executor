@@ -152,7 +152,7 @@ functions:
     image:
       name: execute
       command:
-        - execute.handler
+        - src/functions/execute.handler
     memorySize: 8192
     timeout: 600
     events:

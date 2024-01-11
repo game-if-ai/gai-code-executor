@@ -18,12 +18,12 @@ class LessonDownloader(ABC):
 
 class CafeDownloader(LessonDownloader):
     def download_files_for_lesson(self, models_bucket: str, s3: Any):
-        s3.download_file(models_bucket, "cafe/reviews.json", "./reviews.json")
+        s3.download_file(models_bucket, "cafe/reviews.json", "/tmp/reviews.json")
 
 
 class FruitPickerDownloader(LessonDownloader):
     def download_files_for_lesson(self, models_bucket: str, s3: Any):
-        s3.download_file(models_bucket, "fruitpicker/fruits.json", "./fruits.json")
+        s3.download_file(models_bucket, "fruitpicker/fruits.json", "/tmp/fruits.json")
 
 
 class NeuralMachineTranslationDownloader(LessonDownloader):
@@ -31,20 +31,20 @@ class NeuralMachineTranslationDownloader(LessonDownloader):
         s3.download_file(
             models_bucket,
             "neural_machine_translation/small_vocab_en",
-            "./small_vocab_en",
+            "/tmp/small_vocab_en",
         )
         s3.download_file(
             models_bucket,
             "neural_machine_translation/small_vocab_fr",
-            "./small_vocab_fr",
+            "/tmp/small_vocab_fr",
         )
         s3.download_file(
             models_bucket,
             "neural_machine_translation/translation_tf.zip",
-            "./translation_tf.zip",
+            "/tmp/translation_tf.zip",
         )
-        os.mkdir("./translation.tf")
-        shutil.unpack_archive("./translation_tf.zip", "./translation.tf", "zip")
+        os.mkdir("/tmp/translation.tf")
+        shutil.unpack_archive("/tmp/translation_tf.zip", "/tmp/translation.tf", "zip")
 
 
 class PlanesDownloader(LessonDownloader):
@@ -52,40 +52,40 @@ class PlanesDownloader(LessonDownloader):
         s3.download_file(
             models_bucket,
             "planes/Epoch30_tiny_accuracy.json",
-            "./Epoch30_tiny_accuracy.json",
+            "/tmp/Epoch30_tiny_accuracy.json",
         )
         s3.download_file(
             models_bucket,
             "planes/Epoch60_tiny_accuracy.json",
-            "./Epoch60_tiny_accuracy.json",
+            "/tmp/Epoch60_tiny_accuracy.json",
         )
         s3.download_file(
             models_bucket,
             "planes/Epoch30_small_accuracy.json",
-            "./Epoch30_small_accuracy.json",
+            "/tmp/Epoch30_small_accuracy.json",
         )
         s3.download_file(
             models_bucket,
             "planes/Epoch60_small_accuracy.json",
-            "./Epoch60_small_accuracy.json",
+            "/tmp/Epoch60_small_accuracy.json",
         )
         s3.download_file(
             models_bucket,
             "planes/Epoch30_medium_accuracy.json",
-            "./Epoch30_medium_accuracy.json",
+            "/tmp/Epoch30_medium_accuracy.json",
         )
         s3.download_file(
             models_bucket,
             "planes/Epoch60_medium_accuracy.json",
-            "./Epoch60_medium_accuracy.json",
+            "/tmp/Epoch60_medium_accuracy.json",
         )
         s3.download_file(
             models_bucket,
             "planes/Epoch30_large_accuracy.json",
-            "./Epoch30_large_accuracy.json",
+            "/tmp/Epoch30_large_accuracy.json",
         )
         s3.download_file(
             models_bucket,
             "planes/Epoch60_large_accuracy.json",
-            "./Epoch60_large_accuracy.json",
+            "/tmp/Epoch60_large_accuracy.json",
         )
