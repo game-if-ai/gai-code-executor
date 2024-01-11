@@ -44,6 +44,7 @@ class NeuralMachineTranslationDownloader(LessonDownloader):
             "/tmp/translation_tf.zip",
         )
         os.mkdir("/tmp/translation.tf")
+        shutil.rmtree("/tmp/translation.tf")
         shutil.unpack_archive("/tmp/translation_tf.zip", "/tmp/translation.tf", "zip")
 
 
@@ -88,4 +89,45 @@ class PlanesDownloader(LessonDownloader):
             models_bucket,
             "planes/Epoch60_large_accuracy.json",
             "/tmp/Epoch60_large_accuracy.json",
+        )
+
+        s3.download_file(
+            models_bucket,
+            "planes/Epoch30_tiny_predictions.json",
+            "/tmp/Epoch30_tiny_predictions.json",
+        )
+        s3.download_file(
+            models_bucket,
+            "planes/Epoch60_tiny_predictions.json",
+            "/tmp/Epoch60_tiny_predictions.json",
+        )
+        s3.download_file(
+            models_bucket,
+            "planes/Epoch30_small_predictions.json",
+            "/tmp/Epoch30_small_predictions.json",
+        )
+        s3.download_file(
+            models_bucket,
+            "planes/Epoch60_small_predictions.json",
+            "/tmp/Epoch60_small_predictions.json",
+        )
+        s3.download_file(
+            models_bucket,
+            "planes/Epoch30_medium_predictions.json",
+            "/tmp/Epoch30_medium_predictions.json",
+        )
+        s3.download_file(
+            models_bucket,
+            "planes/Epoch60_medium_predictions.json",
+            "/tmp/Epoch60_medium_predictions.json",
+        )
+        s3.download_file(
+            models_bucket,
+            "planes/Epoch30_large_predictions.json",
+            "/tmp/Epoch30_large_predictions.json",
+        )
+        s3.download_file(
+            models_bucket,
+            "planes/Epoch60_large_predictions.json",
+            "/tmp/Epoch60_large_predictions.json",
         )
