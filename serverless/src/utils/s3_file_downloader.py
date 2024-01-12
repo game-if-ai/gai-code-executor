@@ -43,8 +43,9 @@ class NeuralMachineTranslationDownloader(LessonDownloader):
             "neural_machine_translation/translation_tf.zip",
             "/tmp/translation_tf.zip",
         )
+        if os.path.exists("/tmp/translation.tf"):
+            shutil.rmtree("/tmp/translation.tf")
         os.mkdir("/tmp/translation.tf")
-        shutil.rmtree("/tmp/translation.tf")
         shutil.unpack_archive("/tmp/translation_tf.zip", "/tmp/translation.tf", "zip")
 
 
