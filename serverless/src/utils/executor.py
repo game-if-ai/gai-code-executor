@@ -42,7 +42,7 @@ def execute_code(code: str, uuid: str = "") -> Tuple[str, str, str]:
                 return (
                     f"no result variable instantiated.  Could not return result.  local vars:\n {str(local_vars)}",
                     console_output,
-                    FAILURE_STATE
+                    FAILURE_STATE,
                 )
         else:
             return (bandit_result_as_string, "", FAILURE_STATE)
