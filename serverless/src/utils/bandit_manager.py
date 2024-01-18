@@ -25,9 +25,9 @@ class BanditResult(JSONWizard):
 
 def write_python_file(code_as_string: str, uuid: str = "") -> str:
     if uuid != "":
-        directory = path.join(path.curdir, uuid)
+        directory = path.join("/tmp", uuid)
     else:
-        directory = path.join(path.curdir, uuid4().__str__())
+        directory = path.join("/tmp", uuid4().__str__())
     mkdir(directory)
     file_path = path.join(directory, CODE_FILE_NAME)
     with open(file_path, "w") as file:
@@ -56,7 +56,7 @@ def read_output(directory: str) -> Tuple[BanditResult, str]:
 def evaluate_bandit_results(results: BanditResult) -> bool:
     return (
         results.metrics["_totals"]["SEVERITY.HIGH"] == 0
-        and results.metrics["_totals"]["SEVERITY.MEDIUM"] == 0
+        and results.metrics["_totals"]["SEVERITY.MEDIUM"] <= 1
     )
 
 

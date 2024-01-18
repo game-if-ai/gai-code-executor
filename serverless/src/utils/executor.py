@@ -8,20 +8,29 @@ from typing import Dict, Any, Tuple
 from contextlib import redirect_stdout
 from io import StringIO
 from src.utils.bandit_manager import scan_user_code
+from src.utils.logger import get_logger
+
+
+log = get_logger("executor")
 
 
 def execute_code(code: str, uuid: str = "") -> Tuple[str, str]:
+    log.info("entering execute code function")
+    console_output = ""
     try:
+        log.info("scanning code")
         (code_is_valid, bandit_result_as_string) = scan_user_code(code, uuid)
         if code_is_valid:
             local_vars: Dict[str, Any] = {}
             string_io = StringIO()
-            console_output = ""
+            log.info("executing code")
             with redirect_stdout(string_io):
                 exec(code, local_vars, local_vars)
                 console_output = string_io.getvalue()
-
+            log.info(console_output)
+            log.info("code executed")
             if "result" in local_vars.keys():
+                log.info(local_vars["result"])
                 return (local_vars["result"], console_output)
             else:
                 local_vars.pop(
@@ -34,4 +43,6 @@ def execute_code(code: str, uuid: str = "") -> Tuple[str, str]:
         else:
             return (bandit_result_as_string, "")
     except Exception as e:
+        log.info("exception thrown")
+        console_output = string_io.getvalue()
         return (e.__str__(), console_output)
