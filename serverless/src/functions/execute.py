@@ -10,7 +10,7 @@ import os
 import boto3
 from src.utils.utils import require_env
 from src.utils.logger import get_logger
-from src.utils.executor import execute_code
+from src.utils.executor import execute_code, FAILURE_STATE
 from src.utils.s3_file_downloader import (
     LessonDownloader,
     CafeDownloader,
@@ -50,11 +50,11 @@ def handler(event, context):
 
         try:
             LESSON_DOWNLOADERS[lesson].download_files_for_lesson(MODELS_BUCKET, s3)
-            (result, console) = execute_code(code)
-            update_status(request["id"], "SUCCESS", result, console)
+            (result, console, state) = execute_code(code)
+            update_status(request["id"], state, result, console)
         except Exception as e:
             log.exception(e)
-            update_status(request["id"], "FAILURE", e.args.__str__())
+            update_status(request["id"], FAILURE_STATE, e.args.__str__())
 
 
 def update_status(id, status, result="", console=""):
