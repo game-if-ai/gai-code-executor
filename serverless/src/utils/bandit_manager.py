@@ -56,7 +56,7 @@ def read_output(directory: str) -> Tuple[BanditResult, str]:
 def evaluate_bandit_results(results: BanditResult) -> bool:
     return (
         results.metrics["_totals"]["SEVERITY.HIGH"] == 0
-        and results.metrics["_totals"]["SEVERITY.MEDIUM"] <= 1
+        and results.metrics["_totals"]["SEVERITY.MEDIUM"] <= 0
     )
 
 
