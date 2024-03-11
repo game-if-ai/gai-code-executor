@@ -35,6 +35,7 @@ def test_coverage():
         ("class", False),
         ("nmt", False),
         ("http_request", True),
+        ("wine", False),
     ],
 )
 def test_code_execution(sample_code: str, expect_security_failure: bool):

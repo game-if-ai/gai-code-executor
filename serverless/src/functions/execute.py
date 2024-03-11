@@ -17,6 +17,7 @@ from src.utils.s3_file_downloader import (
     FruitPickerDownloader,
     NeuralMachineTranslationDownloader,
     PlanesDownloader,
+    WineDownloader,
 )
 from typing import Dict
 
@@ -37,6 +38,7 @@ LESSON_DOWNLOADERS: Dict[str, LessonDownloader] = {
     "cafe": CafeDownloader(),
     "neural_machine_translation": NeuralMachineTranslationDownloader(),
     "fruitpicker": FruitPickerDownloader(),
+    "wine": WineDownloader(),
 }
 
 
