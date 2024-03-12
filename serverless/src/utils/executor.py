@@ -49,4 +49,4 @@ def execute_code(code: str, uuid: str = "") -> Tuple[str, str, str]:
     except Exception as e:
         log.info("exception thrown")
         console_output = string_io.getvalue()
-        return (e.__str__(), console_output, FAILURE_STATE)
+        return (f"{e.__class__.__name__}:{e.__str__()}", console_output, FAILURE_STATE)
