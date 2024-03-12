@@ -1,1 +1,1 @@
-name 'non_existent_variable' is not defined
+NameError:name 'non_existent_variable' is not defined
