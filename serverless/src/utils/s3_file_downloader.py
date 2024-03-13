@@ -16,6 +16,13 @@ class LessonDownloader(ABC):
         raise NotImplementedError()
 
 
+class WineDownloader(LessonDownloader):
+    def download_files_for_lesson(self, models_bucket: str, s3: Any):
+        s3.download_file(
+            models_bucket, "wine/wineQualityReds.csv", "/tmp/wineQualityReds.csv"
+        )
+
+
 class CafeDownloader(LessonDownloader):
     def download_files_for_lesson(self, models_bucket: str, s3: Any):
         s3.download_file(models_bucket, "cafe/reviews.json", "/tmp/reviews.json")

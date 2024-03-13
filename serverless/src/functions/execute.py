@@ -17,6 +17,7 @@ from src.utils.s3_file_downloader import (
     FruitPickerDownloader,
     NeuralMachineTranslationDownloader,
     PlanesDownloader,
+    WineDownloader,
 )
 from typing import Dict
 
@@ -37,6 +38,7 @@ LESSON_DOWNLOADERS: Dict[str, LessonDownloader] = {
     "cafe": CafeDownloader(),
     "neural_machine_translation": NeuralMachineTranslationDownloader(),
     "fruitpicker": FruitPickerDownloader(),
+    "wine": WineDownloader(),
 }
 
 
@@ -54,7 +56,9 @@ def handler(event, context):
             update_status(request["id"], state, result, console)
         except Exception as e:
             log.exception(e)
-            update_status(request["id"], FAILURE_STATE, e.args.__str__())
+            update_status(
+                request["id"], FAILURE_STATE, f"{e.__class__.__name__}:{e.__str__()}"
+            )
 
 
 def update_status(id, status, result="", console=""):
