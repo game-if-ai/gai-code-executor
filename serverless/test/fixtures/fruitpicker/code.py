@@ -24,9 +24,11 @@ def classify(fruit, label):
         "label": label,
         "inputText": fruit["description"],
         "realLabel": fruit["traits"][label],
-        "classifierLabel": fruit["traits"][label]
-        if correctAnswer
-        else fruits[random.randint(0, len(fruits) - 1)]["traits"][label],
+        "classifierLabel": (
+            fruit["traits"][label]
+            if correctAnswer
+            else fruits[random.randint(0, len(fruits) - 1)]["traits"][label]
+        ),
         "confidence": random.uniform(0, 1),
     }
     return output
