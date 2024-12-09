@@ -7,6 +7,7 @@
 import json
 import datetime
 import os
+import shutil
 import boto3
 from src.utils.utils import require_env
 from src.utils.logger import get_logger
@@ -33,6 +34,33 @@ aws_region = os.environ.get("REGION", "us-east-1")
 dynamodb = boto3.resource("dynamodb", region_name=aws_region)
 job_table = dynamodb.Table(JOBS_TABLE_NAME)
 
+def log_temp_folder():
+    # List contents of the /tmp folder
+    temp_path = '/tmp'
+    num_files_listed = 0
+    max_files_listed = 100
+    if os.path.exists(temp_path):
+        print("Contents of /tmp folder:")
+        for root, dirs, files in os.walk(temp_path):
+            if num_files_listed >= max_files_listed:
+                break
+            for name in files:
+                print(f"File: {os.path.join(root, name)}")
+                num_files_listed += 1
+            for name in dirs:
+                print(f"Directory: {os.path.join(root, name)}")
+                num_files_listed += 1
+    else:
+        print("/tmp folder does not exist.")
+    
+    # Check available space in the container
+    total, used, free = shutil.disk_usage("/")
+    print(f"Total space: {total / (1024**3):.2f} GB")
+    print(f"Used space: {used / (1024**3):.2f} GB")
+    print(f"Free space: {free / (1024**3):.2f} GB")
+
+# Call the function to log the details
+
 LESSON_DOWNLOADERS: Dict[str, LessonDownloader] = {
     "planes": PlanesDownloader(),
     "cafe": CafeDownloader(),
@@ -40,6 +68,7 @@ LESSON_DOWNLOADERS: Dict[str, LessonDownloader] = {
     "fruitpicker": FruitPickerDownloader(),
     "wine": WineDownloader(),
 }
+
 
 
 def handler(event, context):
