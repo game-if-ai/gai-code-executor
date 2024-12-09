@@ -41,15 +41,15 @@ def log_temp_folder():
     num_files_listed = 0
     max_files_listed = 100
     if os.path.exists(temp_path):
-        print("Contents of /tmp folder:")
+        log.log("Contents of /tmp folder:")
         for root, dirs, files in os.walk(temp_path):
             if num_files_listed >= max_files_listed:
                 break
             for name in files:
-                print(f"File: {os.path.join(root, name)}")
+                log.log(f"File: {os.path.join(root, name)}")
                 num_files_listed += 1
             for name in dirs:
-                print(f"Directory: {os.path.join(root, name)}")
+                log.log(f"Directory: {os.path.join(root, name)}")
                 num_files_listed += 1
     else:
         print("/tmp folder does not exist.")
@@ -73,6 +73,7 @@ LESSON_DOWNLOADERS: Dict[str, LessonDownloader] = {
 
 
 def handler(event, context):
+    log_temp_folder()
     for record in event["Records"]:
         request = json.loads(str(record["body"]))
         code = request["code"]
