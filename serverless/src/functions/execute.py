@@ -41,24 +41,24 @@ def log_temp_folder():
     num_files_listed = 0
     max_files_listed = 100
     if os.path.exists(temp_path):
-        log.log("Contents of /tmp folder:")
+        log.info("Contents of /tmp folder:")
         for root, dirs, files in os.walk(temp_path):
             if num_files_listed >= max_files_listed:
                 break
             for name in files:
-                log.log(f"File: {os.path.join(root, name)}")
+                log.info(f"File: {os.path.join(root, name)}")
                 num_files_listed += 1
             for name in dirs:
-                log.log(f"Directory: {os.path.join(root, name)}")
+                log.info(f"Directory: {os.path.join(root, name)}")
                 num_files_listed += 1
     else:
-        print("/tmp folder does not exist.")
+        log.info("/tmp folder does not exist.")
 
     # Check available space in the container
     total, used, free = shutil.disk_usage("/")
-    print(f"Total space: {total / (1024**3):.2f} GB")
-    print(f"Used space: {used / (1024**3):.2f} GB")
-    print(f"Free space: {free / (1024**3):.2f} GB")
+    log.info(f"Total space: {total / (1024**3):.2f} GB")
+    log.info(f"Used space: {used / (1024**3):.2f} GB")
+    log.info(f"Free space: {free / (1024**3):.2f} GB")
 
 
 # Call the function to log the details
