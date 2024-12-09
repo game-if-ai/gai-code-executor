@@ -35,9 +35,6 @@ def tempdir_cleanup_context():
                 shutil.rmtree(value)
                 print(f"Cleaned up tempdir: {value}")
 
-        namespace.clear()
-        print("Namespace cleared.")
-
 
 def execute_code(code: str, uuid: str = "") -> Tuple[str, str, str]:
     log.info("entering execute code function")
