@@ -24,9 +24,8 @@ log = get_logger("executor")
 def tempdir_cleanup_context():
     namespace = {}
     try:
-        yield namespace  # Pass namespace for exec to modify
+        yield namespace
     finally:
-        # Optionally clean up tempdirs before clearing
         for value in namespace.values():
             if (
                 isinstance(value, str)
