@@ -36,17 +36,22 @@ job_table = dynamodb.Table(JOBS_TABLE_NAME)
 
 
 def log_temp_folder():
-    # List contents of the /tmp folder
+    # List contents of the /tmp folder and calculate the total size
     temp_path = "/tmp"
     num_files_listed = 0
     max_files_listed = 100
+    total_size = 0  # To accumulate the size of all files
+
     if os.path.exists(temp_path):
         log.info("Contents of /tmp folder:")
         for root, dirs, files in os.walk(temp_path):
             if num_files_listed >= max_files_listed:
                 break
             for name in files:
-                log.info(f"File: {os.path.join(root, name)}")
+                file_path = os.path.join(root, name)
+                file_size = os.path.getsize(file_path)
+                total_size += file_size
+                log.info(f"File: {file_path} | Size: {file_size / (1024 ** 2):.2f} MB")
                 num_files_listed += 1
             for name in dirs:
                 log.info(f"Directory: {os.path.join(root, name)}")
@@ -54,11 +59,14 @@ def log_temp_folder():
     else:
         log.info("/tmp folder does not exist.")
 
+    # Log the total size of files in /tmp
+    log.info(f"Total size of files in /tmp: {total_size / (1024 ** 2):.2f} MB")
+
     # Check available space in the container
     total, used, free = shutil.disk_usage("/")
-    log.info(f"Total space: {total / (1024**3):.2f} GB")
-    log.info(f"Used space: {used / (1024**3):.2f} GB")
-    log.info(f"Free space: {free / (1024**3):.2f} GB")
+    log.info(f"Total space: {total / (1024 ** 3):.2f} GB")
+    log.info(f"Used space: {used / (1024 ** 3):.2f} GB")
+    log.info(f"Free space: {free / (1024 ** 3):.2f} GB")
 
 
 # Call the function to log the details
