@@ -12,6 +12,7 @@ from src.utils.logger import get_logger
 from contextlib import contextmanager
 import shutil
 import os
+import tempfile
 
 SUCCESS_STATE = "SUCCESS"
 FAILURE_STATE = "FAILURE"
@@ -23,14 +24,20 @@ log = get_logger("executor")
 def tempdir_cleanup_context():
     namespace = {}
     try:
-        yield namespace
+        yield namespace  # Pass namespace for exec to modify
     finally:
-        log.info("cleaning up tempdir")
-        # Check for `tempdir` and clean up if it exists
-        tempdir = namespace.get("tempdir")
-        if tempdir and isinstance(tempdir, str) and os.path.isdir(tempdir):
-            shutil.rmtree(tempdir)
-            log.info(f"Cleaned up tempdir: {tempdir}")
+        # Optionally clean up tempdirs before clearing
+        for value in namespace.values():
+            if (
+                isinstance(value, str)
+                and os.path.isdir(value)
+                and value.startswith(tempfile.gettempdir())
+            ):
+                shutil.rmtree(value)
+                print(f"Cleaned up tempdir: {value}")
+
+        namespace.clear()
+        print("Namespace cleared.")
 
 
 def execute_code(code: str, uuid: str = "") -> Tuple[str, str, str]:

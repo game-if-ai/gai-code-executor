@@ -7,7 +7,6 @@
 import json
 import datetime
 import os
-import shutil
 import boto3
 from src.utils.utils import require_env
 from src.utils.logger import get_logger
@@ -35,34 +34,6 @@ dynamodb = boto3.resource("dynamodb", region_name=aws_region)
 job_table = dynamodb.Table(JOBS_TABLE_NAME)
 
 
-def log_temp_folder():
-    # List contents of the /tmp folder and calculate the total size
-    temp_path = "/tmp"
-    num_files_listed = 0
-    total_size = 0  # To accumulate the size of all files
-
-    if os.path.exists(temp_path):
-        log.info("Contents of /tmp folder:")
-        for root, dirs, files in os.walk(temp_path):
-            for name in files:
-                file_path = os.path.join(root, name)
-                file_size = os.path.getsize(file_path)
-                total_size += file_size
-            for name in dirs:
-                num_files_listed += 1
-    else:
-        log.info("/tmp folder does not exist.")
-
-    # Log the total size of files in /tmp
-    log.info(f"Total size of files in /tmp: {total_size / (1024 ** 2):.2f} MB")
-
-    # Check available space in the container
-    total, used, free = shutil.disk_usage("/")
-    log.info(f"Total space: {total / (1024 ** 3):.2f} GB")
-    log.info(f"Used space: {used / (1024 ** 3):.2f} GB")
-    log.info(f"Free space: {free / (1024 ** 3):.2f} GB")
-
-
 # Call the function to log the details
 
 LESSON_DOWNLOADERS: Dict[str, LessonDownloader] = {
@@ -75,7 +46,6 @@ LESSON_DOWNLOADERS: Dict[str, LessonDownloader] = {
 
 
 def handler(event, context):
-    log_temp_folder()
     for record in event["Records"]:
         request = json.loads(str(record["body"]))
         code = request["code"]
