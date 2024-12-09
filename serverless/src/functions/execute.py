@@ -39,22 +39,16 @@ def log_temp_folder():
     # List contents of the /tmp folder and calculate the total size
     temp_path = "/tmp"
     num_files_listed = 0
-    max_files_listed = 100
     total_size = 0  # To accumulate the size of all files
 
     if os.path.exists(temp_path):
         log.info("Contents of /tmp folder:")
         for root, dirs, files in os.walk(temp_path):
-            if num_files_listed >= max_files_listed:
-                break
             for name in files:
                 file_path = os.path.join(root, name)
                 file_size = os.path.getsize(file_path)
                 total_size += file_size
-                log.info(f"File: {file_path} | Size: {file_size / (1024 ** 2):.2f} MB")
-                num_files_listed += 1
             for name in dirs:
-                log.info(f"Directory: {os.path.join(root, name)}")
                 num_files_listed += 1
     else:
         log.info("/tmp folder does not exist.")
