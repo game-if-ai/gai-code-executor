@@ -154,6 +154,8 @@ functions:
       command:
         - src/functions/execute.handler
     memorySize: 8192
+    ephemeralStorage:
+      size: 10240
     timeout: 600
     events:
       - sqs:
