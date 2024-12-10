@@ -33,6 +33,7 @@ aws_region = os.environ.get("REGION", "us-east-1")
 dynamodb = boto3.resource("dynamodb", region_name=aws_region)
 job_table = dynamodb.Table(JOBS_TABLE_NAME)
 
+
 LESSON_DOWNLOADERS: Dict[str, LessonDownloader] = {
     "planes": PlanesDownloader(),
     "cafe": CafeDownloader(),
