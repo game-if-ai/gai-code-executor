@@ -51,7 +51,11 @@ def handler(event, context):
         update_status(request["id"], "IN_PROGRESS")
 
         try:
-            LESSON_DOWNLOADERS[lesson].download_files_for_lesson(MODELS_BUCKET, s3)
+            (
+                LESSON_DOWNLOADERS[lesson].download_files_for_lesson(MODELS_BUCKET, s3)
+                if lesson in LESSON_DOWNLOADERS.keys()
+                else None
+            )
             (result, console, state) = execute_code(code)
             update_status(request["id"], state, result, console)
         except Exception as e:
