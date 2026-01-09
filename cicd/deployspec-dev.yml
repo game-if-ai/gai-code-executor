@@ -17,6 +17,7 @@ phases:
     commands:
       - pip3 install poetry
       - poetry install --no-root
+      - poetry self add poetry-plugin-export
 
   build:
     commands:
