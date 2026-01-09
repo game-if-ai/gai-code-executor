@@ -1,5 +1,8 @@
 # gameifai-code-executor
 
+Tech Debt:
+- [ ] Migrate from Poetry to UV
+
 This service will execute python code provided by the user of game-if-ai
 
 ## Requirements
